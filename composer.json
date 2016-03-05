@@ -1,0 +1,19 @@
+{
+  "name": "profenter/tools",
+  "description": "A lib of often used functions and classes",
+  "type": "lib",
+  "license": "GNU-GPL-v3",
+  "authors": [
+    {
+      "name": "Profenter Systems",
+      "email": "service@profenter.de"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "profenter\\": "lib/"
+    }
+  }
+}
