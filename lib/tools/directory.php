@@ -737,10 +737,3 @@ class directory {
 		return $this->relativePath;
 	}
 }
-
-print_r( directory::init()
-                  ->addIgnore( [ ".git", ".gitignore", ".idea" ] )
-                  ->setRoot( "/media/alexander/Daten/Dokumente/PHPprojekte/php-tools" )//->setCache( ".profenter" )
-                  ->get()
-                  ->cd( "/docs/../lib" )
-                  ->asArray() );
