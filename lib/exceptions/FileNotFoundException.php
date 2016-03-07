@@ -15,14 +15,55 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace profenter\exceptions;
 
 /**
  * Class FileNotFoundException
  *
  * @package profenter\exceptions
- * @since 1.0.0 based on https://github.com/profenter/simpleDirLister/blob/9e5782fed9631575c2ce5122c120e8db7c5a13ee/include/classes/FileNotFoundException.php
+ * @since   1.0.0 based on https://github.com/profenter/simpleDirLister/blob/9e5782fed9631575c2ce5122c120e8db7c5a13ee/include/classes/FileNotFoundException.php
  */
 class FileNotFoundException extends \Exception {
+	protected $path = "/";
+
+	public function __construct( $message, $code = false, \Exception $previous = NULL ) {
+		if ( ! defined( "DS" ) ) {
+			define( "DS", DIRECTORY_SEPARATOR );
+		}
+		$this->path = $message;
+		$message    = "\nCould not find file: '" . $this->path . "' Reason:";
+		if ( is_dir( $this->path ) ) {
+			$message .= "It's a dir, not a file.";
+		} else if ( ( $dir = $this->checkForDirs() ) === false ) {
+			$message .= "File not found.";
+		} else if ( ( $dir = $this->checkForDirs() ) !== true ) {
+			$message .= "Path to file is wrong, check the following dir:" . $dir . " .";
+		} else {
+			$message .= "File does not exists.";
+		}
+		$message .= "\n";
+		parent::__construct( $message, $code, $previous );
+	}
+
+	protected function checkForDirs() {
+		$e     = explode( DS, $this->path );
+		$s     = "";
+		$break = false;
+		foreach ( $e as $dir ) {
+			if ( ! empty( $dir ) ) {
+				$s .= DS . $dir;
+				if ( ! is_dir( $s ) ) {
+					$break = true;
+					break;
+				}
+			}
+		}
+		if ( $s == $this->path ) {
+			return false;
+		} else if ( $break ) {
+			return $s;
+		}
+
+		return true;
+	}
 }

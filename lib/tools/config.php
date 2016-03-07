@@ -72,6 +72,9 @@ class config {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		if ( ! defined( "DS" ) ) {
+			define( "DS", DIRECTORY_SEPARATOR );
+		}
 	}
 
 	/**
