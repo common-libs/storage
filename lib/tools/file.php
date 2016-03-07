@@ -130,6 +130,3 @@ class file {
 		return $this->info->getGroup();
 	}
 }
-
-echo file::init( "/home/alexander/Downloads/livestreamer-twitch-gui-v0.12.0-linux64.tar.gz" )
-         ->getGroup();
