@@ -24,8 +24,18 @@ namespace profenter\exceptions;
  * @since   1.0.0 based on https://github.com/profenter/simpleDirLister/blob/9e5782fed9631575c2ce5122c120e8db7c5a13ee/include/classes/FileNotFoundException.php
  */
 class FileNotFoundException extends \Exception {
+	/**
+	 * @var string
+	 */
 	protected $path = "/";
 
+	/**
+	 * FileNotFoundException constructor.
+	 *
+	 * @param string          $message path which was not found
+	 * @param bool            $code    error code, unused at the moment
+	 * @param \Exception|NULL $previous
+	 */
 	public function __construct( $message, $code = false, \Exception $previous = NULL ) {
 		if ( ! defined( "DS" ) ) {
 			define( "DS", DIRECTORY_SEPARATOR );
@@ -45,6 +55,11 @@ class FileNotFoundException extends \Exception {
 		parent::__construct( $message, $code, $previous );
 	}
 
+	/**
+	 * checks if the dir exists
+	 *
+	 * @return bool|string dir which not exists
+	 */
 	protected function checkForDirs() {
 		$e     = explode( DS, $this->path );
 		$s     = "";

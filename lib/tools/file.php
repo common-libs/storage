@@ -19,7 +19,17 @@ namespace profenter\tools;
 
 use profenter\exceptions\FileNotFoundException;
 
+/**
+ * Class file
+ *
+ * @package profenter\tools
+ */
 class file {
+	/**
+	 * path to file
+	 *
+	 * @var string
+	 */
 	protected $file = NULL;
 	/**
 	 * @var \SplFileInfo
@@ -29,9 +39,11 @@ class file {
 	/**
 	 * file constructor.
 	 *
-	 * @param $file
+	 * @param  string $file file path
 	 *
+	 * @since 1.1.0
 	 * @throws \profenter\exceptions\FileNotFoundException
+	 * @return \profenter\tools\file
 	 */
 	public function __construct( $file ) {
 		$this->file = $file;
@@ -43,6 +55,14 @@ class file {
 		return $this;
 	}
 
+	/**
+	 * inits the class
+	 *
+	 * @param string $file file path
+	 *
+	 * @since 1.1.0
+	 * @return \profenter\tools\file
+	 */
 	public static function init( $file ) {
 		return new self( $file );
 	}
@@ -96,6 +116,12 @@ class file {
 		return implode( ".", $e );
 	}
 
+	/**
+	 * get file extension
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
 	public function getExtension() {
 		$extension = $this->info->getExtension();
 		if ( $extension == 'gz' ) {
@@ -106,6 +132,14 @@ class file {
 		return $extension;
 	}
 
+	/**
+	 * get owner of file.
+	 *
+	 * if function 'posix_getpwuid' exists a name is returned
+	 *
+	 * @since 1.1.0
+	 * @return int|string
+	 */
 	public function getOwner() {
 		if ( function_exists( "posix_getpwuid" ) ) {
 			$o = posix_getpwuid( $this->info->getOwner() );
@@ -116,10 +150,25 @@ class file {
 		return $this->info->getOwner();
 	}
 
+	/**
+	 * get filename
+	 *
+	 * @todo  check for double extensions like tar.gz
+	 * @since 1.1.0
+	 * @return string
+	 */
 	public function getFilename() {
 		return $this->info->getFilename();
 	}
 
+	/**
+	 *get group owner of file.
+	 *
+	 * if function 'posix_getgrgid' exists a name is returned
+	 *
+	 * @since 1.1.0
+	 * @return int
+	 */
 	public function getGroup() {
 		if ( function_exists( "posix_getgrgid" ) ) {
 			$o = posix_getgrgid( $this->info->getOwner() );

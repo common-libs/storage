@@ -122,21 +122,6 @@ class directory {
 	}
 
 	/**
-	 * add a subDir for later use
-	 *
-	 * @param string $dir subDir path relative to the main path
-	 *
-	 * @since      1.1.0
-	 * @return \profenter\tools\directory
-	 * @deprecated 1.1.0
-	 */
-	public function addSubDir( $dir ) {
-		$this->subDir = $dir;
-
-		return $this;
-	}
-
-	/**
 	 * generates an array of all dir with subDirs for the given dir
 	 *
 	 * @since 1.1.0
@@ -177,7 +162,6 @@ class directory {
 					$content = common::stdclassToArray( json_decode( file_get_contents( $path ), true ) );
 				}
 				$this->files = $content;
-				print_r( $this->files );
 
 				return $this;
 			}
@@ -386,51 +370,59 @@ class directory {
 	}
 
 	/**
-	 * finds a file path in a array of a file tree
+	 * search for a file or directory
 	 *
+	 * @param string $search name of file or directory which should be found
+	 *
+	 * @since 1.2.0
 	 * @return \profenter\tools\directory
-	 * @throws FileNotFoundException
-	 * @since      1.1.0
-	 * @deprecated 1.1.0
 	 */
-	public function gotoSubDir() {
-		$pathArray = $this->files;
-		$path      = $this->subDir;
-		$e         = explode( "/", $path );
-		foreach ( $e as $i => $value ) {
-			if ( empty( $value ) ) {
-				unset( $e[ $i ] );
+	public function find( $search ) {
+		$e = explode( DS, $search );
+		foreach ( $e as $item ) {
+			if ( ! empty( $item ) ) {
+				$this->files = $this->search( $this->files, $item );
 			}
 		}
-		foreach ( $e as $val ) {
-			if ( isset( $pathArray[ $val ] ) ) {
-				if ( is_array( $pathArray[ $val ] ) ) {
-					$pathArray = $pathArray[ $val ];
-				} else {
-					$pathArray = [ ];
-				}
-			} else {
-				throw new FileNotFoundException( "404" );
-			}
-		}
-		$this->files = $pathArray;
 
 		return $this;
 	}
 
 	/**
+	 * search for a string recursively in an array
 	 *
+	 * wildcard '*' can be used
+	 *
+	 * @param array  $array  array which should be searched in
+	 * @param string $search search string
+	 *
+	 * @since 1.2.0
+	 * @return array
 	 */
-	public function find() {
+	public function search( $array, $search ) {
+		$found = [ ];
+		foreach ( $array as $key => $item ) {
+			if ( fnmatch( $search, $key ) ) {
+				$found[ $key ] = $item;
+			} else if ( is_array( $item ) ) {
+				$rec = $this->search( $item, $search );
+				if ( ! empty( $rec ) ) {
+					$found[ $key ] = $rec;
+				}
+			}
+		}
+
+		return $found;
 	}
 
 	/**
 	 * changes location based on unix expressions
 	 *
-	 * @param $location
+	 * @param string $location
 	 *
-	 * @return $this
+	 * @return \profenter\tools\directory
 	 * @throws \profenter\exceptions\FileNotFoundException
+	 * @since 1.1.0
 	 */
 	public function cd( $location ) {
 		$e = explode( DS, $location );
@@ -459,6 +451,8 @@ class directory {
 
 	/**
 	 * moves the file tree to dir above
+	 *
+	 * @since 1.1.0
 	 */
 	protected function above() {
 		$e = explode( DS, $this->getDir() );
@@ -496,7 +490,7 @@ class directory {
 	}
 
 	/**
-	 *
+	 * @todo implement
 	 */
 	public function rm() {
 	}
@@ -507,6 +501,7 @@ class directory {
 	 * @param array  $tree current dir tree
 	 * @param string $base in which dir we are
 	 *
+	 * @since 1.1.0
 	 * @return array
 	 */
 	protected function reCalcTreeValue( $tree, $base = DS ) {
@@ -540,6 +535,7 @@ class directory {
 	 * @param boolean $baseval
 	 *
 	 * @return array
+	 * @since     1.1.0
 	 */
 	protected function explodeTree( $array, $delimiter = '_', $baseval = false ) {
 		if ( ! is_array( $array ) ) {
@@ -607,6 +603,7 @@ class directory {
 	 * @param boolean|string $cache path
 	 *
 	 * @return \profenter\tools\directory
+	 * @since 1.1.0
 	 */
 	public function setCache( $cache ) {
 		$this->cache = $cache;
@@ -618,6 +615,7 @@ class directory {
 	 * get cache path if set
 	 *
 	 * @return boolean|string
+	 * @since 1.1.0
 	 */
 	public function getCache() {
 		return $this->cache;
@@ -629,6 +627,7 @@ class directory {
 	 * @param array|string $ignore
 	 *
 	 * @return \profenter\tools\directory
+	 * @since 1.1.0
 	 */
 	public function addIgnore( $ignore ) {
 		if ( is_string( $ignore ) ) {
@@ -646,6 +645,7 @@ class directory {
 	 * @param bool|string $cacheConfig
 	 *
 	 * @return \profenter\tools\directory
+	 * @since 1.1.0
 	 */
 	public function setCacheConfig( $cacheConfig ) {
 		$this->cacheConfig = $cacheConfig;
@@ -656,7 +656,8 @@ class directory {
 	/**
 	 * gets the name of cacheConfig file
 	 *
-	 * @return bool|string
+	 * @return bool|string|\profenter\tools\config
+	 * @since 1.1.0
 	 */
 	public function getCacheConfig() {
 		return $this->cacheConfig;
@@ -668,6 +669,7 @@ class directory {
 	 * @param string $root
 	 *
 	 * @return \profenter\tools\directory
+	 * @since 1.1.0
 	 */
 	public function setRoot( $root ) {
 		$this->root = $root;
@@ -679,6 +681,7 @@ class directory {
 	 * gets the root path
 	 *
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function getRoot() {
 		return $this->root;
@@ -689,7 +692,8 @@ class directory {
 	 *
 	 * @param null|string $dir
 	 *
-	 * @return directory
+	 * @return \profenter\tools\directory
+	 * @since 1.1.0
 	 */
 	public function setDir( $dir ) {
 		$this->dir = $dir;
@@ -701,32 +705,11 @@ class directory {
 	 * gets the current dir this class work on
 	 *
 	 * @return null|string
+	 * @since 1.1.0
 	 */
 	public function getDir() {
 		return $this->dir;
 	}
-
-	/**
-	 * returns subDir
-	 *
-	 * @return string
-	 * @deprecated 1.1.0
-	 */
-	protected function getSubDir() {
-		return $this->subDir;
-	}
-
-	/**
-	 * sets subDir
-	 *
-	 * @param string $subDir
-	 *
-	 * @deprecated 1.1.0
-	 */
-	protected function setSubDir( $subDir ) {
-		$this->subDir = $subDir;
-	}
-
 	/**
 	 * returns relative path
 	 *
@@ -737,10 +720,3 @@ class directory {
 		return $this->relativePath;
 	}
 }
-
-print_r( directory::init()
-                  ->addIgnore( [ ".git", ".gitignore", ".idea" ] )
-                  ->setRoot( "/media/alexander/Daten/Dokumente/PHPprojekte/php-tools" )//->setCache( ".profenter" )
-                  ->get()
-                  ->cd( "/docs/../lib" )
-                  ->asArray() );
