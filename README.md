@@ -1,7 +1,10 @@
 # php-tools
 A php lib of often used functions and classes
 
-
+## installation
+ `composer require profenter/tools`
+ 
+packagist.org: [profenter/tools](https://packagist.org/packages/profenter/tools)
 ## use it
 
 Include  ```vendor/autoload.php```.
