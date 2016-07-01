@@ -13,6 +13,9 @@
   "require": {
     "phpfastcache/phpfastcache": "^4.3"
   },
+  "require-dev": {
+    "phpunit/phpunit": "5.4.*"
+  },
   "autoload": {
     "psr-4": {
       "profenter\\": "lib/"

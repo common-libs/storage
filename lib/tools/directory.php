@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2016.  Profenter Systems <service@profenter.de>
  *  
@@ -17,7 +18,6 @@
  */
 namespace profenter\tools;
 
-use phpFastCache\CacheManager;
 use phpFastCache\Exceptions\phpFastCacheDriverException;
 use profenter\exceptions\FileNotFoundException;
 use RecursiveDirectoryIterator;
@@ -67,11 +67,7 @@ class directory {
 	 * @since 1.1.0
 	 */
 	protected $root = "/";
-	/**
-	 * @var null|string
-	 * @since 1.1.5
-	 */
-	protected $parsed;
+
 
 	/**
 	 *  alias for new directory()
@@ -110,21 +106,25 @@ class directory {
 		}
 		else {
 			$this->setBasePath($dir);
-			$this->setDir($dir);
+			$this->setDir(DS);
+			$this->setRoot($dir);
 		}
 		$this->filePath     = __FILE__;
 		$this->relativePath = str_replace("lib" . DS . "tools" . DS . basename(__FILE__), "", __FILE__);
+
+		return $this;
+	}
+
+	protected function run() {
 		if($this->exists()) {
+
 			try {
-				CacheManager::CachingMethod("phpfastcache");
-				CacheManager::setup([
-					"path" => $this->getDir() . DS . ".simpledirlister" . DS . "tmp" . DS,
-				]);
+
 				$cache = dir::$getCacheInstance;
 				$id    = md5($this->getDir());
 				$files = $cache->get($id);
 				if(is_null($files) or !$cache) {
-					$iterator = new RecursiveDirectoryIterator($this->getDir());
+					$iterator = new RecursiveDirectoryIterator(common::fixPaths($this->getBasePath() . $this->getDir()));
 					$iterator->setFlags(RecursiveDirectoryIterator::SKIP_DOTS);
 					$this->setFilters();
 					$files  = [];
@@ -132,7 +132,7 @@ class directory {
 					foreach($aFiles as $file) {
 						$files[str_replace($this->getBasePath(), "", $file->getPathname())] = str_replace($this->getBasePath(), "", $file->getPathname());
 					}
-					$files = $this->explodeTree($files, DS, true);
+					$files = $this->parse($this->explodeTree($files, DS, true));
 					$cache->set($id, $files, 3600);
 				}
 				$this->files = $files;
@@ -144,13 +144,9 @@ class directory {
 			}
 		}
 		else {
-			throw new FileNotFoundException("This directory was not found: " . $this->getDir());
+			throw new FileNotFoundException("This directory was not found: " . common::fixPaths($this->getBasePath() . $this->getDir()));
 		}
-		$this->parse();
-
-		return $this;
 	}
-
 	/**
 	 * generates an array of all dir with subDirs for the given dir
 	 *
@@ -173,7 +169,7 @@ class directory {
 	 * @return bool
 	 */
 	public function exists() {
-		return is_dir($this->getDir());
+		return is_dir(common::fixPaths($this->getBasePath() . DS . $this->getDir()));
 	}
 
 	/**
@@ -268,14 +264,13 @@ class directory {
 	/**
 	 * removes hidden paths
 	 *
-	 * @param bool  $recursion is recursion used?
 	 * @param array $path      when used with recursion
 	 *
 	 * @return array|\profenter\tools\directory
 	 * @since 1.1.0
 	 *
 	 */
-	protected function parse($recursion = false, $path = []) {
+	protected function parse($path = []) {
 		if(empty($path)) {
 			$path = $this->files;
 		}
@@ -285,7 +280,7 @@ class directory {
 					unset($path[$nameRelative]);
 				}
 				else {
-					$path[$nameRelative] = $this->parse(true, $child);
+					$path[$nameRelative] = $this->parse($child);
 				}
 			}
 			else {
@@ -294,14 +289,8 @@ class directory {
 				}
 			}
 		}
-		if($recursion) {
-			return $path;
-		}
-		else {
-			$this->parsed = $path;
 
-			return $this;
-		}
+		return $path;
 	}
 
 	/**
@@ -313,7 +302,7 @@ class directory {
 	 * @return bool
 	 */
 	public function isHidden($path) {
-		$path = ltrim($path, '/');
+		$path = ltrim($path, DS);
 		foreach($this->ignore as $hiddenPath) {
 			if(fnmatch($hiddenPath, $path)) {
 				return true;
@@ -334,7 +323,9 @@ class directory {
 	 * @return array
 	 */
 	public function asArray() {
-		return $this->parsed;
+		$this->run();
+
+		return $this->files;
 	}
 
 	/**
@@ -344,6 +335,7 @@ class directory {
 	 * @return array
 	 */
 	public function getPlain() {
+		$this->run();
 		return $this->files;
 	}
 
@@ -354,7 +346,9 @@ class directory {
 	 * @return string
 	 */
 	public function asJson() {
-		return json_encode($this->parsed);
+		$this->run();
+
+		return json_encode($this->files);
 	}
 
 	/**
@@ -377,6 +371,7 @@ class directory {
 	 * @return \profenter\tools\directory
 	 */
 	public function find($search) {
+		$this->run();
 		$e = explode(DS, $search);
 		foreach($e as $item) {
 			if(!empty($item)) {
@@ -426,7 +421,7 @@ class directory {
 	 */
 	public function cd($location) {
 		$e = explode(DS, $location);
-		if($location == "/" or $location[0] == "/") {
+		if($location == DS or $location[0] == DS) {
 			while($this->getDir() != $this->getRoot()) {
 				$this->above();
 			}
@@ -439,12 +434,11 @@ class directory {
 				else if($item == ".") {
 					continue;
 				}
-				else if(isset($this->files[$item])) {
-					$this->files = $this->files[$item];
+				else if(is_dir(common::fixPaths($this->getBasePath() . DS . $this->getDir() . DS . $item))) {
 					$this->setDir($this->getDir() . DS . $item);
 				}
 				else {
-					throw new FileNotFoundException($this->getDir() . DS . $item);
+					throw new FileNotFoundException(common::fixPaths($this->getBasePath() . $this->getDir() . DS . $item));
 				}
 			}
 		}
@@ -456,39 +450,14 @@ class directory {
 	 * moves the file tree to dir above
 	 *
 	 * @since 1.1.0
+	 * @todo  check
 	 */
 	protected function above() {
 		$e = explode(DS, $this->getDir());
-		unset($e[count($e) - 1]);
+		if(count($e) > 1) {
+			unset($e[count($e) - 1]);
+		}
 		$dir      = implode(DS, $e);
-		$iterator = new RecursiveDirectoryIterator($dir);
-		$iterator->setFlags(RecursiveDirectoryIterator::SKIP_DOTS);
-		$this->setFilters();
-		$files  = [];
-		$aFiles = new RecursiveIteratorIterator(new DirListerRecursiveFilterIterator($iterator), RecursiveIteratorIterator::SELF_FIRST);
-		$aFiles->setMaxDepth(0);
-		foreach($aFiles as $file) {
-			$files[ltrim(str_replace($dir, "", $file->getPathname()), DS)] = str_replace($dir, "", $file->getPathname());
-		}
-		$e       = explode(DS, $this->getDir());
-		$dirname = $e[count($e) - 1];
-		$tmp     = $files;
-		unset($tmp[$dirname]);
-		foreach($tmp as $item) {
-			if(is_dir($dir . DS . $item)) {
-				$iterator = new RecursiveDirectoryIterator($dir . DS . $item);
-				$iterator->setFlags(RecursiveDirectoryIterator::SKIP_DOTS);
-				$this->setFilters();
-				$f      = [];
-				$aFiles = new RecursiveIteratorIterator(new DirListerRecursiveFilterIterator($iterator), RecursiveIteratorIterator::SELF_FIRST);
-				foreach($aFiles as $file) {
-					$f[ltrim(str_replace($dir . DS . $item, "", $file->getPathname()), DS)] = str_replace($dir, "", $file->getPathname());
-				}
-				$files[ltrim($item, DS)] = $this->explodeTree($f, DS, true);
-			}
-		}
-		$files[$dirname] = $this->files;
-		$this->files     = $this->reCalcTreeValue($this->explodeTree($files, DS, true));
 		$this->setDir($dir);
 	}
 
@@ -589,7 +558,7 @@ class directory {
 	 * @return directory
 	 */
 	protected function setBasePath($basePath) {
-		$this->basePath = $basePath;
+		$this->basePath = common::fixPaths($basePath);
 
 		return $this;
 	}
@@ -611,6 +580,7 @@ class directory {
 	 *
 	 * @return \profenter\tools\directory
 	 * @since 1.1.0
+	 * @deprecated 1.1.5
 	 */
 	public function setCache($cache) {
 		return $this;
@@ -621,6 +591,7 @@ class directory {
 	 *
 	 * @return boolean|string
 	 * @since 1.1.0
+	 * @deprecated 1.1.5
 	 */
 	public function getCache() {
 		return [];
@@ -641,8 +612,6 @@ class directory {
 		else {
 			$this->ignore = array_merge($this->ignore, $ignore);
 		}
-		$this->parse();
-
 		return $this;
 	}
 
@@ -702,8 +671,7 @@ class directory {
 	 * @since 1.1.0
 	 */
 	public function setDir($dir) {
-		$this->dir = $dir;
-
+		$this->dir = common::fixPaths($dir);
 		return $this;
 	}
 

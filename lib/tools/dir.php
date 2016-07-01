@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /**
  * Created by PhpStorm.
  * User: alexander
@@ -27,30 +26,49 @@ namespace profenter\tools;
 use Memcache;
 use phpFastCache\CacheManager;
 
+/**
+ * Class dir
+ * @package profenter\tools
+ */
 class dir {
-	protected static $instances        = [];
-	protected static $getCacheInstance = NULL;
+	/**
+	 * @var array
+	 */
+	protected static $instances = [];
+	/**
+	 * @var null
+	 */
+	public static $getCacheInstance = NULL;
+	/**
+	 * @var bool
+	 */
+	protected static $setuped = false;
 
 	/**
-	 * @param $id
+	 * get a instance
+	 *
+	 * @param string|integer $id
 	 *
 	 * @return directory
 	 */
 	public static function getInstance($id) {
 		if(!$id or !isset(self::$instances[$id])) {
-			return self::newInstance($id);
+			return self::newInstance("", $id);
 		}
 
 		return self::$instances[$id];
 	}
 
 	/**
-	 * @param      $path
-	 * @param bool $id
+	 * create a new directory instance
+	 *
+	 * @param   string               $path
+	 * @param string|integer|boolean $id
 	 *
 	 * @return directory
 	 */
 	public static function newInstance($path, $id = false) {
+		self::setup($path);
 		if(!$id) {
 			$id = rand(0, 10000);
 		}
@@ -65,9 +83,14 @@ class dir {
 	}
 
 	/**
-	 *
+	 * setup this class
 	 */
-	public static function setup() {
+	protected static function setup($path) {
+		if(self::$setuped)
+			return;
+		if(!defined("DS")) {
+			define("DS", DIRECTORY_SEPARATOR);
+		}
 		$isMemcacheAvailable = false;
 		if(class_exists('Memcache')) {
 			$memcache            = new Memcache;
@@ -85,5 +108,17 @@ class dir {
 			]);
 			self::$getCacheInstance = CacheManager::getInstance('memcache');
 		}
+		else if(function_exists('sqlite_open')) {
+			CacheManager::setup("storage", "sqlite");
+			self::$getCacheInstance = CacheManager::getInstance();
+		}
+		else {
+			CacheManager::setup([
+				"path" => common::fixPaths($path . DS . ".simpledirlister" . DS . "tmp" . DS),
+			]);
+			CacheManager::CachingMethod("phpfastcache");
+			self::$getCacheInstance = CacheManager::Files();
+		}
+		self::$setuped = true;
 	}
 }
