@@ -39,12 +39,49 @@ class cdn {
 		cacheManager::setFile();
 	}
 
+	public function check() {
+		$cache = cacheManager::$getCacheInstance;
+		$test  = $cache->get(md5("profentercdntestmode"));
+		if(is_null($test)) {
+			$test = json_decode(file_get_contents("http://cdn.profenter.de/api/" . json_encode([
+					"version"  => "2",
+					"testmode" => true
+				])), true);
+			$cache->set("profentercdntestmode", $test);
+		}
+		if($test["working"] == "true") {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function getImage($keyname = false, $height = false, $width = false) {
+		if(is_array($this->url)) {
+			$re = [
+				$keyname => [
+					"url"    => $this->url[$keyname],
+					"width"  => $width,
+					"height" => $height
+				]
+			];
+		}
+		else {
+			$re = [
+				1 => [
+					"url"    => $this->url,
+					"width"  => $width,
+					"height" => $height
+				]
+			];
+		}
+
+		return $this->getIncUrl($re);
+	}
+
 	public function getUrl($keyname = false) {
 		if(is_array($this->url)) {
 			$re = [
-				"version" => 2,
-				"items"   => [
-				]
 			];
 			foreach($this->url as $key => $item) {
 				$re["items"][$key] = [
@@ -61,14 +98,11 @@ class cdn {
 		}
 		else {
 			$request = $this->doRequest([
-				"version" => 2,
-				"items"   => [
-					1 => [
-						"url" => $this->url,
-						"get" => [
-							"sri"  => "sri",
-							"type" => "type"
-						]
+				1 => [
+					"url" => $this->url,
+					"get" => [
+						"sri"  => "sri",
+						"type" => "type"
 					]
 				]
 			]);
@@ -131,6 +165,10 @@ class cdn {
 		foreach($a as $key => $item) {
 			$jsonarray = $cache->get(md5($item["url"]));
 			if(is_null($jsonarray) or !$cache) {
+				$newArray["items"][$key] = $item;
+				if(!isset($newArray["items"][$key]["get"])) {
+					$newArray["items"][$key]["get"] = [];
+				}
 				$newArray["items"][$key]                  = $item;
 				$newArray["items"][$key]["get"]["orgurl"] = "url";
 			}
@@ -149,5 +187,14 @@ class cdn {
 		}
 
 		return $res;
+	}
+
+	protected function getIncUrl($a) {
+		$newArray = [
+			"version" => 2,
+			"items"   => $a
+		];
+
+		return $this->apibase . json_encode($newArray);
 	}
 }
