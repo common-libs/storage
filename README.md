@@ -1,4 +1,4 @@
-# php-tools
+# php-tools - v0.1.6
 A php lib of often used functions and classes
 
 ## installation

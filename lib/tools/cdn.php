@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2016.  Profenter Systems <service@profenter.de>
  *  
@@ -17,10 +18,40 @@
  */
 namespace profenter\tools;
 class cdn {
+    /**
+     * @var string
+     */
 	protected $apibase = "https://cdn.profenter.de/api/";
-	protected $base    = "https://cdn.profenter.de/";
+    /**
+     * @var string
+     */
+    protected $base = "https://cdn.profenter.de/";
+    /**
+     * @var bool|string
+     */
+    protected $width = false;
+    /**
+     * @var  bool|string
+     */
+    protected $height = false;
 
 	/**
+     * @return bool|string
+     */
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
 	 * @param  string|array $url
 	 *
 	 * @return \profenter\tools\cdn
@@ -39,6 +70,9 @@ class cdn {
 		cacheManager::setFile();
 	}
 
+    /**
+     * @return bool
+     */
 	public function check() {
 		$cache = cacheManager::$getCacheInstance;
 		$test  = $cache->get(md5("profentercdntestmode"));
@@ -56,13 +90,19 @@ class cdn {
 		return false;
 	}
 
-	public function getImage($keyname = false, $height = false, $width = false) {
+    /**
+     * @param bool $keyname
+     *
+     * @return string
+     */
+    public function getImage($keyname = false)
+    {
 		if(is_array($this->url)) {
 			$re = [
 				$keyname => [
 					"url"    => $this->url[$keyname],
-					"width"  => $width,
-					"height" => $height
+                    "width" => $this->getWidth(),
+                    "height" => $this->getHeight()
 				]
 			];
 		}
@@ -70,8 +110,8 @@ class cdn {
 			$re = [
 				1 => [
 					"url"    => $this->url,
-					"width"  => $width,
-					"height" => $height
+                    "width" => $this->getWidth(),
+                    "height" => $this->getHeight()
 				]
 			];
 		}
@@ -79,13 +119,19 @@ class cdn {
 		return $this->getIncUrl($re);
 	}
 
+    /**
+     * @param bool $keyname
+     *
+     * @return string
+     */
 	public function getUrl($keyname = false) {
 		if(is_array($this->url)) {
-			$re = [
-			];
+            $re = [];
 			foreach($this->url as $key => $item) {
-				$re["items"][$key] = [
+                $re[$key] = [
 					"url" => $item,
+                    "width" => $this->getWidth(),
+                    "height" => $this->getHeight(),
 					"get" => [
 						"sri"  => "sri",
 						"type" => "type"
@@ -93,13 +139,15 @@ class cdn {
 				];
 			}
 			$request = $this->doRequest($re);
-
+            print_r($request);
 			return $this->base . $request[$keyname]["filestring"];
 		}
 		else {
 			$request = $this->doRequest([
 				1 => [
 					"url" => $this->url,
+                    "width" => $this->getWidth(),
+                    "height" => $this->getHeight(),
 					"get" => [
 						"sri"  => "sri",
 						"type" => "type"
@@ -111,6 +159,9 @@ class cdn {
 		}
 	}
 
+    /**
+     * @return string
+     */
 	public function getHtml() {
 		if(is_array($this->url)) {
 			$re = [];
@@ -155,6 +206,34 @@ class cdn {
 		}
 	}
 
+    /**
+     * @param $width
+     *
+     * @return $this
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * @param $height
+     *
+     * @return $this
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+        return $this;
+    }
+
+    /**
+     * @param $a
+     *
+     * @return array
+     */
 	protected function doRequest($a) {
 		$cache    = cacheManager::$getCacheInstance;
 		$newArray = [
@@ -163,7 +242,7 @@ class cdn {
 		];
 		$res      = [];
 		foreach($a as $key => $item) {
-			$jsonarray = $cache->get(md5($item["url"]));
+            $jsonarray = $cache->get(md5($item["url"] . $item["width"] . $item["height"]));
 			if(is_null($jsonarray) or !$cache) {
 				$newArray["items"][$key] = $item;
 				if(!isset($newArray["items"][$key]["get"])) {
@@ -177,6 +256,7 @@ class cdn {
 			}
 		}
 		if(!empty($newArray["items"])) {
+            print_r($this->apibase . json_encode($newArray));
 			$result = json_decode(file_get_contents($this->apibase . json_encode($newArray)), true);
 			if(!empty($result)) {
 				foreach($result as $key => $item) {
@@ -189,6 +269,11 @@ class cdn {
 		return $res;
 	}
 
+    /**
+     * @param $a
+     *
+     * @return string
+     */
 	protected function getIncUrl($a) {
 		$newArray = [
 			"version" => 2,
