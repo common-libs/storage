@@ -309,20 +309,23 @@ class directory {
         if (empty($path)) {
             $path = $this->files;
         }
-        foreach ($path as $nameRelative => $child) {
-            if (is_array($child)) {
-                if (isset($child["__base_val"]) && $this->isHidden($child["__base_val"])) {
-                    unset($path[$nameRelative]);
-                } else {
-                    $path[$nameRelative] = $this->parse($child);
-                }
-            } else {
-                if ($this->isHidden($child)) {
-                    unset($path[$nameRelative]);
-                }
-            }
-        }
-
+	    if(!empty($path)) {
+		    foreach($path as $nameRelative => $child) {
+			    if(is_array($child)) {
+				    if(isset($child["__base_val"]) && $this->isHidden($child["__base_val"])) {
+					    unset($path[$nameRelative]);
+				    }
+				    else {
+					    $path[$nameRelative] = $this->parse($child);
+				    }
+			    }
+			    else {
+				    if($this->isHidden($child)) {
+					    unset($path[$nameRelative]);
+				    }
+			    }
+		    }
+	    }
         return $path;
     }
 

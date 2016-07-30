@@ -24,7 +24,7 @@
 namespace profenter\tools;
 
 use Memcache;
-use phpFastCache\CacheManager;
+use phpFastCache\CacheManager as CM;
 
 /**
  * Class dir
@@ -99,7 +99,7 @@ class dir {
             $isMemcacheAvailable = @$memcache->connect('localhost');
         }
         if ($isMemcacheAvailable) {
-            CacheManager::setup([
+	        CM::setup([
                 'memcache' => [
                     [
                         '127.0.0.1',
@@ -108,16 +108,16 @@ class dir {
                     ],
                 ],
             ]);
-            self::$getCacheInstance = CacheManager::getInstance('memcache');
+	        self::$getCacheInstance = CM::getInstance('memcache');
         } else if (function_exists('sqlite_open')) {
-            CacheManager::setup("storage", "sqlite");
-            self::$getCacheInstance = CacheManager::getInstance();
+	        CM::setup("storage", "sqlite");
+	        self::$getCacheInstance = CM::getInstance();
         } else {
-            CacheManager::setup([
+	        CM::setup([
                 "path" => common::fixPaths($path . DS . ".profenter" . DS . "simpledirlister" . DS . "cache" . DS),
             ]);
-            CacheManager::CachingMethod("phpfastcache");
-            self::$getCacheInstance = CacheManager::Files();
+	        CM::CachingMethod("phpfastcache");
+	        self::$getCacheInstance = CM::Files();
         }
         self::$setuped = true;
     }
