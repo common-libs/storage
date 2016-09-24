@@ -15,35 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace profenter\tools;
 
-use RecursiveFilterIterator;
+namespace profenter\tools\storage;
 
 /**
- * Class DirListerRecursiveFilterIterator
+ * Class driver
  *
- * @package profenter\tools
- * @since   1.1.0
+ * @property file file
+ * @method  array getContent()
+ * @method  null setContent(array $array)
+ * @package profenter\tools\storage
+ * @since   1.3.0
  */
-class DirListerRecursiveFilterIterator extends RecursiveFilterIterator {
-	/**
-	 * which files should be filtered
-	 *
-	 * @var array
-	 * @since   1.1.0
-	 */
-	public static $FILTERS = [
-		'__MACOSX',
-	];
+trait driver
+{
 
-	/**
-	 * checks if the given file should be filtered
-	 *
-	 * @return bool
-	 * @since   1.1.0
-	 */
-	public function accept() {
-		return ! in_array( $this->current()
-		                        ->getFilename(), self::$FILTERS, true );
-	}
 }

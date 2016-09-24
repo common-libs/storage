@@ -15,15 +15,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace profenter\exceptions;
-
+namespace profenter\tools\storage;
 /**
- * Class JsonException
+ * Class json
  *
- * @package profenter\exceptions
- * @since   1.0.0 based on
- *          https://github.com/profenter/simpleDirLister/blob/9e5782fed9631575c2ce5122c120e8db7c5a13ee/include/classes/JsonException.php
+ * provides json driver
+ *
+ * @package profenter\tools\storage
+ * @since   1.3.0
  */
-class JsonException extends \Exception
+trait json
 {
+	use driver;
+
+	/**
+	 * render method
+	 *
+	 * @since 1.3.0
+	 */
+	protected function render()
+	{
+		if (empty($this->getContent())) {
+			$parsed = json_decode($this->file->getContent(), true);
+			$this->setContent(is_array($parsed) ? $parsed : []);
+		}
+	}
+
+	/**
+	 * save method
+	 *
+	 * @since 1.3.0
+	 */
+	protected function save()
+	{
+		$this->file->setContent(json_encode($this->getContent()));
+	}
 }

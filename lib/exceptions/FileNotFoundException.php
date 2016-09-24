@@ -21,9 +21,11 @@ namespace profenter\exceptions;
  * Class FileNotFoundException
  *
  * @package profenter\exceptions
- * @since   1.0.0 based on https://github.com/profenter/simpleDirLister/blob/9e5782fed9631575c2ce5122c120e8db7c5a13ee/include/classes/FileNotFoundException.php
+ * @since   1.0.0 based on
+ *          https://github.com/profenter/simpleDirLister/blob/9e5782fed9631575c2ce5122c120e8db7c5a13ee/include/classes/FileNotFoundException.php
  */
-class FileNotFoundException extends \Exception {
+class FileNotFoundException extends \Exception
+{
 	/**
 	 * @var string
 	 */
@@ -36,23 +38,24 @@ class FileNotFoundException extends \Exception {
 	 * @param bool            $code    error code, unused at the moment
 	 * @param \Exception|NULL $previous
 	 */
-	public function __construct( $message, $code = false, \Exception $previous = NULL ) {
-		if ( ! defined( "DS" ) ) {
-			define( "DS", DIRECTORY_SEPARATOR );
+	public function __construct($message, $code = false, \Exception $previous = NULL)
+	{
+		if (!defined("DS")) {
+			define("DS", DIRECTORY_SEPARATOR);
 		}
 		$this->path = $message;
 		$message    = "\nCould not find file: '" . $this->path . "' Reason:";
-		if ( is_dir( $this->path ) ) {
+		if (is_dir($this->path)) {
 			$message .= "It's a dir, not a file.";
-		} else if ( ( $dir = $this->checkForDirs() ) === false ) {
+		} else if (($dir = $this->checkForDirs()) === false) {
 			$message .= "File not found.";
-		} else if ( ( $dir = $this->checkForDirs() ) !== true ) {
+		} else if (($dir = $this->checkForDirs()) !== true) {
 			$message .= "Path to file is wrong, check the following dir:" . $dir . " .";
 		} else {
 			$message .= "File does not exists.";
 		}
 		$message .= "\n";
-		parent::__construct( $message, $code, $previous );
+		parent::__construct($message, $code, $previous);
 	}
 
 	/**
@@ -60,22 +63,23 @@ class FileNotFoundException extends \Exception {
 	 *
 	 * @return bool|string dir which not exists
 	 */
-	protected function checkForDirs() {
-		$e     = explode( DS, $this->path );
+	protected function checkForDirs()
+	{
+		$e     = explode(DS, $this->path);
 		$s     = "";
 		$break = false;
-		foreach ( $e as $dir ) {
-			if ( ! empty( $dir ) ) {
+		foreach ($e as $dir) {
+			if (!empty($dir)) {
 				$s .= DS . $dir;
-				if ( ! is_dir( $s ) ) {
+				if (!is_dir($s)) {
 					$break = true;
 					break;
 				}
 			}
 		}
-		if ( $s == $this->path ) {
+		if ($s == $this->path) {
 			return false;
-		} else if ( $break ) {
+		} else if ($break) {
 			return $s;
 		}
 
