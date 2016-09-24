@@ -1,4 +1,4 @@
-# php-tools - v0.2.0 -  [![Packagist](https://img.shields.io/packagist/dt/profenter/tools.svg?maxAge=2592000&style=flat-square)](https://packagist.org/packages/profenter/tools) [![GitHub release](https://img.shields.io/github/release/profenter/php-tools.svg?maxAge=2592000&style=flat-square)](https://github.com/profenter/php-tools) [![license](https://img.shields.io/github/license/profenter/php-tools.svg?maxAge=2592000&style=flat-square)](https://github.com/profenter/php-tools)
+# php-tools - v0.2.0 -  [![Packagist](https://img.shields.io/packagist/dt/profenter/tools.svg?maxAge=2592000&style=flat-square)](https://packagist.org/packages/profenter/tools) [![GitHub release](https://img.shields.io/github/release/profenter/php-tools.svg?maxAge=2592000&style=flat-square)](https://github.com/profenter/php-tools) [![license](https://img.shields.io/github/license/profenter/php-tools.svg?maxAge=2592000&style=flat-square)](https://github.com/profenter/php-tools) [![license](https://img.shields.io/badge/composer-profenter/tools-orange.svg?style=flat-square)](https://packagist.org/packages/profenter/tools) 
 A php lib of often used functions and classes
 
 ## Installation
