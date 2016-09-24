@@ -2,7 +2,7 @@
   "name": "profenter\/tools",
   "description": "A lib of often used functions and classes",
   "type": "lib",
-  "license": "GNU-GPL-v3",
+  "license": "GPL-3.0+",
   "authors": [
     {
       "name": "Profenter Systems",
