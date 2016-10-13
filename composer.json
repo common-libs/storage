@@ -1,8 +1,9 @@
 {
-  "name": "profenter\/tools",
-  "description": "A lib of often used functions and classes",
+  "name": "common-libs\/storage",
+  "description": "A storage class, see github for more infos",
   "type": "lib",
   "license": "GPL-3.0+",
+  "homepage": "https://github.com/common-libs/storage",
   "authors": [
     {
       "name": "Profenter Systems",
@@ -13,15 +14,12 @@
   "require": {
     "symfony/yaml": "^v3.1"
   },
-  "require-old": {
-    "phpfastcache\/phpfastcache": "^4.3"
-  },
   "require-dev": {
     "phpunit\/phpunit": "5.4.*"
   },
   "autoload": {
     "psr-4": {
-      "profenter\\": "lib\/"
+      "profenter\\storage\\": "src\/"
     }
   }
 }

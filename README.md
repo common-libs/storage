@@ -1,25 +1,27 @@
-# php-tools - v0.2.0 -  [![Packagist](https://img.shields.io/packagist/dt/profenter/tools.svg?maxAge=2592000&style=flat-square)](https://packagist.org/packages/profenter/tools) [![GitHub release](https://img.shields.io/github/release/profenter/php-tools.svg?maxAge=2592000&style=flat-square)](https://github.com/profenter/php-tools) [![license](https://img.shields.io/github/license/profenter/php-tools.svg?maxAge=2592000&style=flat-square)](https://github.com/profenter/php-tools) [![license](https://img.shields.io/badge/composer-profenter/tools-orange.svg?style=flat-square)](https://packagist.org/packages/profenter/tools) 
-A php lib of often used functions and classes
+# Common Libs - Storage - v0.2.1 -  [![Packagist](https://img.shields.io/packagist/dt/common-libs/storage.svg?maxAge=2592000&style=flat-square)](https://packagist.org/packages/common-libs/storage) [![GitHub release](https://img.shields.io/github/release/common-libs/storage.svg?maxAge=2592000&style=flat-square)](https://github.com/common-libs/storage) [![license](https://img.shields.io/github/license/common-libs/storage.svg?maxAge=2592000&style=flat-square)](https://github.com/common-libs/storage) [![license](https://img.shields.io/badge/composer-common-libs/storage-orange.svg?style=flat-square)](https://packagist.org/packages/common-libs/storage) 
+
+A php lib for storing data to files. The storage class can be used for working with own config files. So for example your php project uses a database like mysql and you want to store the creditails in an config file. By using this storage class its done withhin secounds.
+
 
 ## Installation
 
 ###Composer
 
-`composer require profenter/tools`
+`composer require common-libs/storage`
 
 In php do: ```require_once("vendor/autoload.php");```.
 ###Without Composer
 
 ```php
  spl_autoload_register(function($class) {
-    $prefix = 'profenter\\tools\\';
+    $prefix = 'profenter\\tools\\storage\\';
 
     if ( ! substr($class, 0, 14) === $prefix) {
         return;
     }
 
     $class = substr($class, strlen($prefix));
-    $location = __DIR__ . 'path/to/php-tools/lib/' . str_replace('\\', '/', $class) . '.php';
+    $location = __DIR__ . 'path/to/this/dir/src/' . str_replace('\\', '/', $class) . '.php';
 
     if (is_file($location)) {
         require_once($location);
@@ -27,12 +29,10 @@ In php do: ```require_once("vendor/autoload.php");```.
 });
 ```
 
-## Componets
+## Use it
 
-### storage
-The storage class can be used for working with own config files. So for example your php project uses a database like mysql and you want to store the creditails in an config file. By using this storage class its done withhin secounds.
 
-#### Basic Usage
+### Basic Usage
 
 Create a new class `myConfigClass` and extend it to `profenter\tools\storage\storage`:
 ```php
@@ -115,4 +115,4 @@ myConfigClass::init()->foo = "bar";
 echo myConfigClass::init();
 ```
 
-For more details see [examples](https://github.com/profenter/php-tools/blob/master/examples/storage) or [wiki](https://github.com/profenter/php-tools/wiki/Storage:Overview)
+For more details see [examples](https://github.com/common-libs/storage/blob/master/examples/storage) or [wiki](https://github.com/common-libs/storage/wiki/Storage:Overview)
