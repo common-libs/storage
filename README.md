@@ -34,10 +34,10 @@ In php do: ```require_once("vendor/autoload.php");```.
 
 ### Basic Usage
 
-Create a new class `myConfigClass` and extend it to `profenter\tools\storage\storage`:
+Create a new class `myConfigClass` and extend it to `libs\storage\storage`:
 ```php
 <?php
-use profenter\tools\storage\storage;
+use libs\storage\storage;
 
 class myConfigClass extends storage
 {
@@ -46,8 +46,8 @@ class myConfigClass extends storage
 Now create `myConfigClass::setConfig()` and setup the config file:
 ```php
 <?php
-use profenter\tools\storage\storage;
-use profenter\tools\storage\file;
+use libs\storage\storage;
+use libs\storage\file;
 
 class myConfigClass extends storage
 {
@@ -69,9 +69,9 @@ class myConfigClass extends storage
 Maybe you already noticed that we haven't set the file format. You do it by importing the correct driver (using traits):
 ```php
 <?php
-use profenter\tools\storage\storage;
-use profenter\tools\storage\file;
-use profenter\tools\storage\json;
+use libs\storage\storage;
+use libs\storage\file;
+use libs\storage\json;
 
 class myConfigClass extends storage
 {
@@ -92,7 +92,7 @@ class myConfigClass extends storage
 }
 ```
 Supported formats: 
-profenter\tools\storage\
+libs\storage\
 
  - ini
  - json

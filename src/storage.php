@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace profenter\tools\storage;
+namespace libs\storage;
 
 /**
  * Class storage
  *
- * @package profenter\tools\storage
+ * @package libs\storage
  * @method void save()
  * @method void render()
  * @since   1.0.0
@@ -44,7 +44,7 @@ class storage
 	/**
 	 * alias for __construct
 	 *
-	 * @return \profenter\tools\storage\storage
+	 * @return \libs\storage\storage
 	 * @since 1.0.0
 	 */
 	public static function init() : storage

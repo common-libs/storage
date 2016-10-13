@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace profenter\tools\storage;
+namespace libs\storage;
 
 use SimpleXMLElement;
 
@@ -24,7 +24,7 @@ use SimpleXMLElement;
  *
  * provides xml driver
  *
- * @package profenter\tools\storage
+ * @package libs\storage
  * @since   1.3.0
  */
 trait xml
