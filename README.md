@@ -14,7 +14,7 @@ In php do: ```require_once("vendor/autoload.php");```.
 
 ```php
  spl_autoload_register(function($class) {
-    $prefix = 'profenter\\tools\\storage\\';
+    $prefix = 'libs\\storage\\';
 
     if ( ! substr($class, 0, 14) === $prefix) {
         return;
