@@ -35,7 +35,8 @@ trait json
 	 */
 	protected function render()
 	{
-		if (empty($this->getContent())) {
+        $c = $this->getContent();
+		if (empty($c)) {
 			$parsed = json_decode($this->file->getContent(), true);
 			$this->setContent(is_array($parsed) ? $parsed : []);
 		}
