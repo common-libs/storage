@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace libs\storage;
+namespace common\storage;
+use common\storage\exception\FileNotFoundException;
 
-use profenter\exceptions\FileNotFoundException;
 
 /**
  * Class file
  *
- * @package libs\storage
+ * @package common\storage
  * @since   1.3.0
  */
 class file
@@ -121,6 +121,10 @@ class file
 		$this->path = $path;
 		if (!is_file($path)) {
 			if ($this->isCreateIfNotExists()) {
+				$dir = dirname($path);
+				if (!is_dir($dir)) {
+					mkdir($dir, 0770, true);
+				}
 				touch($path);
 				if (!is_file($path)) {
 					throw new FileNotFoundException($path);

@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace libs\storage\legacy;
+namespace common\storage\legacy;
 
 /**
  * Class storage
  *
- * @package libs\storage\legacy
+ * @package common\storage\legacy
  * @method void save()
  * @method void render()
  * @since   1.0.0
@@ -44,7 +44,7 @@ class storage
 	/**
 	 * alias for __construct
 	 *
-	 * @return \libs\storage\legacy\storage
+	 * @return \common\storage\legacy\storage
 	 * @since 1.0.0
 	 */
 	public static function init()

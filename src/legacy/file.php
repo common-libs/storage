@@ -16,14 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace libs\storage\legacy;
-
-use profenter\exceptions\FileNotFoundException;
+namespace common\storage\legacy;
+use common\storage\exception\FileNotFoundException;
 
 /**
  * Class file
  *
- * @package libs\storage\legacy
+ * @package common\storage\legacy
  * @since   1.3.0
  */
 class file

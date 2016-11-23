@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace libs\storage\legacy;
+namespace common\storage\legacy;
 
 use Symfony\Component\Yaml\Yaml as YamlRender;
 
@@ -24,7 +24,7 @@ use Symfony\Component\Yaml\Yaml as YamlRender;
  *
  * provides yaml driver
  *
- * @package libs\storage\legacy
+ * @package common\storage\legacy
  * @since   1.3.0
  */
 trait yaml

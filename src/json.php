@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace libs\storage;
+namespace common\storage;
 /**
  * Class json
  *
  * provides json driver
  *
- * @package libs\storage
+ * @package common\storage
  * @since   1.3.0
  */
 trait json

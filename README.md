@@ -5,39 +5,20 @@ A php lib for storing data to files. The storage class can be used for working w
 
 ## Installation
 
-###Composer
-
+Run:
 `composer require common-libs/storage`
 
-In php do: ```require_once("vendor/autoload.php");```.
-###Without Composer
-
-```php
- spl_autoload_register(function($class) {
-    $prefix = 'libs\\storage\\';
-
-    if ( ! substr($class, 0, 14) === $prefix) {
-        return;
-    }
-
-    $class = substr($class, strlen($prefix));
-    $location = __DIR__ . 'path/to/this/dir/src/' . str_replace('\\', '/', $class) . '.php';
-
-    if (is_file($location)) {
-        require_once($location);
-    }
-});
-```
+As always load composer in your main file: ```require_once("vendor/autoload.php");```.
 
 ## Use it
 
 
 ### Basic Usage
 
-Create a new class `myConfigClass` and extend it to `libs\storage\storage`:
+Create a new class `myConfigClass` and extend it to `common\storage\storage`:
 ```php
 <?php
-use libs\storage\storage;
+use common\storage\storage;
 
 class myConfigClass extends storage
 {
@@ -46,8 +27,8 @@ class myConfigClass extends storage
 Now create `myConfigClass::setConfig()` and setup the config file:
 ```php
 <?php
-use libs\storage\storage;
-use libs\storage\file;
+use common\storage\storage;
+use common\storage\file;
 
 class myConfigClass extends storage
 {
@@ -60,8 +41,6 @@ class myConfigClass extends storage
 			$options->setCreateIfNotExists(true);
 			$options->setPath("path/to/config/file.extention");
 			$options->setCache(true);
-
-			return $options;
 		};
 	}
 }
@@ -69,9 +48,9 @@ class myConfigClass extends storage
 Maybe you already noticed that we haven't set the file format. You do it by importing the correct driver (using traits):
 ```php
 <?php
-use libs\storage\storage;
-use libs\storage\file;
-use libs\storage\json;
+use common\storage\storage;
+use common\storage\file;
+use common\storage\json;
 
 class myConfigClass extends storage
 {
@@ -85,14 +64,12 @@ class myConfigClass extends storage
 			$options->setCreateIfNotExists(true);
 			$options->setPath("path/to/config/file.extention");
 			$options->setCache(true);
-
-			return $options;
 		};
 	}
 }
 ```
 Supported formats: 
-libs\storage\
+common\storage\
 
  - ini
  - json

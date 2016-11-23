@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace libs\storage\legacy;
+namespace common\storage\legacy;
 
 /**
  * Class driver
@@ -24,7 +24,7 @@ namespace libs\storage\legacy;
  * @property file file
  * @method  array getContent()
  * @method  null setContent(array $array)
- * @package libs\storage\legacy
+ * @package common\storage\legacy
  * @since   1.3.0
  */
 trait driver
