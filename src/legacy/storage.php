@@ -62,7 +62,9 @@ class storage
 		if (!defined("DS")) {
 			define("DS", DIRECTORY_SEPARATOR);
 		}
-		$this->file = call_user_func(static::setConfig(), new file());
+		$file = new file();
+		call_user_func(static::setConfig(), $file);
+		$this->file = $file;
 
 		$this->render();
 	}
