@@ -120,6 +120,10 @@ class file
 		$this->path = $path;
 		if (!is_file($path)) {
 			if ($this->isCreateIfNotExists()) {
+				$dir = dirname($path);
+				if (!is_dir($dir)) {
+					mkdir($dir, 0770, true);
+				}
 				touch($path);
 				if (!is_file($path)) {
 					throw new FileNotFoundException($path);
