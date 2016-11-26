@@ -19,7 +19,7 @@
   },
   "autoload": {
     "psr-4": {
-      "libs\\storage\\": "src\/"
+      "common\\storage\\": "src\/"
     }
   }
 }
