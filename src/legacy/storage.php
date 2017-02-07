@@ -67,6 +67,9 @@ class storage
 		$this->file = $file;
 
 		$this->render();
+		if (method_exists($this, "createDefault") && $file->isCreateDefault()) {
+			$this->createDefault();
+		}
 	}
 
 	/**

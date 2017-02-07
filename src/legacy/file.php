@@ -17,6 +17,7 @@
  */
 
 namespace common\storage\legacy;
+
 use common\storage\exception\FileNotFoundException;
 
 /**
@@ -25,8 +26,7 @@ use common\storage\exception\FileNotFoundException;
  * @package common\storage\legacy
  * @since   1.3.0
  */
-class file
-{
+class file {
 	/**
 	 * @var bool
 	 * @since 1.3.0
@@ -47,15 +47,32 @@ class file
 	 * @since 1.3.0
 	 */
 	protected $createIfNotExists = true;
+	/**
+	 * @var bool
+	 */
+	protected $createDefault = false;
 
 	/**
 	 * file constructor.
 	 *
 	 * @since 1.3.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isCreateDefault() {
+		return $this->createDefault;
+	}
+
+	/**
+	 * @param bool $createDefault
+	 */
+	public function setCreateDefault($createDefault) {
+		$this->createDefault = $createDefault;
 	}
 
 	/**
@@ -64,8 +81,7 @@ class file
 	 * @since 1.3.0
 	 * @return null|string
 	 */
-	public function getContent()
-	{
+	public function getContent() {
 		if (!$this->isCache()) {
 			$this->content = file_get_contents($this->getPath());
 		}
@@ -74,13 +90,24 @@ class file
 	}
 
 	/**
+	 * sets content
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param string|null $content
+	 */
+	public function setContent($content) {
+		$this->content = $content;
+		file_put_contents($this->getPath(), $content);
+	}
+
+	/**
 	 * check if cache is enabled
 	 *
 	 * @since 1.3.0
 	 * @return boolean
 	 */
-	public function isCache()
-	{
+	public function isCache() {
 		return $this->cache;
 	}
 
@@ -91,8 +118,7 @@ class file
 	 *
 	 * @param boolean $cache
 	 */
-	public function setCache($cache)
-	{
+	public function setCache($cache) {
 		$this->cache = $cache;
 	}
 
@@ -102,8 +128,7 @@ class file
 	 * @since 1.3.0
 	 * @return string
 	 */
-	public function getPath()
-	{
+	public function getPath() {
 		return $this->path;
 	}
 
@@ -115,8 +140,7 @@ class file
 	 * @since 1.3.0
 	 * @throws FileNotFoundException
 	 */
-	public function setPath($path)
-	{
+	public function setPath($path) {
 		$this->path = $path;
 		if (!is_file($path)) {
 			if ($this->isCreateIfNotExists()) {
@@ -125,27 +149,16 @@ class file
 					mkdir($dir, 0770, true);
 				}
 				touch($path);
+				$this->setCreateDefault(true);
 				if (!is_file($path)) {
 					throw new FileNotFoundException($path);
 				}
-			} else {
+			}
+			else {
 				throw new FileNotFoundException($path);
 			}
 		}
 		$this->content = file_get_contents($this->getPath());
-	}
-
-	/**
-	 * sets content
-	 *
-	 * @since 1.3.0
-	 *
-	 * @param string|null $content
-	 */
-	public function setContent($content)
-	{
-		$this->content = $content;
-		file_put_contents($this->getPath(), $content);
 	}
 
 	/**
@@ -154,8 +167,7 @@ class file
 	 * @since 1.3.0
 	 * @return boolean
 	 */
-	public function isCreateIfNotExists()
-	{
+	public function isCreateIfNotExists() {
 		return $this->createIfNotExists;
 	}
 
@@ -166,8 +178,7 @@ class file
 	 *
 	 * @param boolean $createIfNotExists
 	 */
-	public function setCreateIfNotExists($createIfNotExists)
-	{
+	public function setCreateIfNotExists($createIfNotExists) {
 		$this->createIfNotExists = $createIfNotExists;
 	}
 }
