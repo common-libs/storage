@@ -28,7 +28,7 @@ trait redbean
     /**
      * render method
      *
-     * @since 1.3.0
+     * @since 0.2.1
      */
     protected function render()
     {
@@ -38,7 +38,7 @@ trait redbean
     /**
      * save method
      *
-     * @since 1.3.0
+     * @since 0.2.1
      */
     protected function save()
     {

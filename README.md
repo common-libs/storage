@@ -15,58 +15,44 @@ As always load composer in your main file: ```require_once("vendor/autoload.php"
 
 ### Basic Usage
 
-Create a new class `myConfigClass` and extend it to `common\storage\storage`:
+Create a new class `myConfigClass` and extend it to `common\storage\Storage`:
 ```php
 <?php
-use common\storage\storage;
+use common\storage\Storage;
 
-class myConfigClass extends storage
+class myConfigClass extends Storage
 {
 }
 ```
-Now create `myConfigClass::setConfig()` and setup the config file:
+Now implement `myConfigClass::setConfig()` and setup the config file:
 ```php
 <?php
-use common\storage\storage;
-use common\storage\file;
+use common\storage\Storage;
+use common\storage\Options;
 
-class myConfigClass extends storage
-{
-	/**
-	 * @return Closure
-	 */
-	public static function setConfig()
-	{
-		return function (file $options) {
-			$options->setCreateIfNotExists(true);
-			$options->setPath("path/to/config/file.extention");
-			$options->setCache(true);
-		};
-	}
+class myConfigClass extends Storage {
+    static function setConfig(Options $options) {
+        $options->setCreateIfNotExists(true);
+        $options->setPath(\common\io\File::get("./.store/test1.json"));
+    }
 }
 ```
 Maybe you already noticed that we haven't set the file format. You do it by importing the correct driver (using traits):
 ```php
 <?php
-use common\storage\storage;
-use common\storage\file;
+use common\storage\Options;
+use common\storage\Storage;
 use common\storage\json;
 
-class myConfigClass extends storage
-{
+class myConfigClass extends Storage {
 	use json;
-	/**
-	 * @return Closure
-	 */
-	public static function setConfig()
-	{
-		return function (file $options) {
-			$options->setCreateIfNotExists(true);
-			$options->setPath("path/to/config/file.extention");
-			$options->setCache(true);
-		};
+
+	static function setConfig(Options $options) {
+		$options->setCreateIfNotExists(true);
+		$options->setPath(\common\io\File::get("./.store/test1.json"));
 	}
 }
+
 ```
 Supported formats: 
 common\storage\
@@ -93,3 +79,25 @@ echo myConfigClass::init();
 ```
 
 For more details see [examples](https://github.com/common-libs/storage/blob/master/examples/storage) or [wiki](https://github.com/common-libs/storage/wiki/Storage:Overview)
+
+Set Defaults
+```php
+<?php
+use common\storage\Options;
+use common\storage\Storage;
+use common\storage\json;
+
+class myConfigClass extends Storage {
+	use json;
+
+	static function setConfig(Options $options) {
+		$options->setCreateIfNotExists(true);
+		$options->setPath(\common\io\File::get("./.store/test1.json"));
+	}
+
+	static function setDefaults(Storage $storage) {
+		$storage->test  = "Hi";
+	}
+}
+
+```

@@ -22,7 +22,7 @@ namespace common\storage;
  * provides serialize driver
  *
  * @package common\storage
- * @since   1.3.0
+ * @since   0.2.1
  */
 trait serialize
 {
@@ -31,7 +31,7 @@ trait serialize
 	/**
 	 * render method
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected function render()
 	{
@@ -44,7 +44,7 @@ trait serialize
 	/**
 	 * save method
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected function save()
 	{

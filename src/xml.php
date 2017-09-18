@@ -25,7 +25,7 @@ use SimpleXMLElement;
  * provides xml driver
  *
  * @package common\storage
- * @since   1.3.0
+ * @since   0.2.1
  */
 trait xml
 {
@@ -34,7 +34,7 @@ trait xml
 	/**
 	 * render method
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected function render()
 	{
@@ -48,7 +48,7 @@ trait xml
 	/**
 	 * save method
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected function save()
 	{
@@ -67,7 +67,7 @@ trait xml
  * @param SimpleXMLElement $xml
  *
  * @link  http://stackoverflow.com/a/5965940
- * @since 1.3.0
+ * @since 0.2.1
  */
 function array_to_xml(array $array, SimpleXMLElement &$xml)
 {

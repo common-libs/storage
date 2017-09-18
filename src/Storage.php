@@ -26,29 +26,28 @@ namespace common\storage;
  * @method void render()
  * @since   1.0.0
  */
-class storage
-{
+abstract class Storage {
 	/**
 	 * contains the parsed storage settings
 	 *
 	 * @var array
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected $content = [];
 	/**
-	 * @var file
-	 * @since 1.3.0
+	 * @var options
+	 * @since 0.2.1
 	 */
 	protected $file;
 
 	/**
 	 * alias for __construct
 	 *
-	 * @return \common\storage\storage
+	 * @return Storage
 	 * @since 1.0.0
 	 */
-	public static function init() : storage
-	{
+	public static function init()
+	: Storage {
 		return new static();
 	}
 
@@ -57,20 +56,20 @@ class storage
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		if (!defined("DS")) {
 			define("DS", DIRECTORY_SEPARATOR);
 		}
-		$file = new file();
-		call_user_func(static::setConfig(), $file);
+		$file = new Options();
+		static::setConfig($file);
 		$this->file = $file;
-
 		$this->render();
-		if (method_exists($this, "createDefault") && $file->isCreateDefault()) {
-			$this->createDefault();
+		if (method_exists($this, "setDefaults") && $file->isCreateDefault()) {
+			$this->setDefaults($this);
 		}
 	}
+
+	abstract static function setConfig(Options $options);
 
 	/**
 	 * returns a settings value by name
@@ -80,8 +79,7 @@ class storage
 	 * @return bool|array|string
 	 * @since 1.0.0
 	 */
-	public function __get($name)
-	{
+	public function __get($name) {
 		if (isset($this->content[$name])) {
 			return $this->content[$name];
 		}
@@ -97,8 +95,7 @@ class storage
 	 *
 	 * @since 1.0.0
 	 */
-	public function __set($name, $value)
-	{
+	public function __set($name, $value) {
 		$this->content[$name] = $value;
 		$this->save();
 	}
@@ -111,8 +108,8 @@ class storage
 	 * @return bool
 	 * @since 1.0.0
 	 */
-	public function __isset(string $name) : bool
-	{
+	public function __isset(string $name)
+	: bool {
 		return isset($this->content[$name]);
 	}
 
@@ -122,8 +119,8 @@ class storage
 	 * @return string
 	 * @since 1.0.0
 	 */
-	public function __toString() : string
-	{
+	public function __toString()
+	: string {
 		return json_encode($this->content);
 	}
 
@@ -131,10 +128,10 @@ class storage
 	 * returns file content
 	 *
 	 * @return array
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
-	public function getContent(): array
-	{
+	public function getContent()
+	: array {
 		return $this->content;
 	}
 
@@ -143,10 +140,9 @@ class storage
 	 *
 	 * @param array $content
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
-	public function setContent(array $content)
-	{
+	public function setContent(array $content) {
 		$this->content = $content;
 	}
 }

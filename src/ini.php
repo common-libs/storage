@@ -23,7 +23,7 @@ namespace common\storage;
  * provides ini driver
  *
  * @package common\storage
- * @since   1.3.0
+ * @since   0.2.1
  */
 trait ini
 {
@@ -32,7 +32,7 @@ trait ini
 	/**
 	 * render method
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected function render()
 	{
@@ -45,7 +45,7 @@ trait ini
 	/**
 	 * save method
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected function save()
 	{
@@ -61,7 +61,7 @@ trait ini
  * @param array $a      start array
  * @param array $parent parent array, used for recursion
  *
- * @since 1.3.0
+ * @since 0.2.1
  * @return string
  */
 function arr2ini(array $a, array $parent = []) : string

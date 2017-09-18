@@ -25,7 +25,7 @@ use Symfony\Component\Yaml\Yaml as YamlRender;
  * provides yaml driver
  *
  * @package common\storage
- * @since   1.3.0
+ * @since   0.2.1
  */
 trait yaml
 {
@@ -34,7 +34,7 @@ trait yaml
 	/**
 	 * render method
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected function render()
 	{
@@ -47,7 +47,7 @@ trait yaml
 	/**
 	 * save method
 	 *
-	 * @since 1.3.0
+	 * @since 0.2.1
 	 */
 	protected function save()
 	{

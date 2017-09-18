@@ -21,11 +21,11 @@ namespace common\storage;
 /**
  * Class driver
  *
- * @property file file
+ * @property options file
  * @method  array getContent()
  * @method  null setContent(array $array)
  * @package common\storage
- * @since   1.3.0
+ * @since   0.2.1
  */
 trait driver
 {
