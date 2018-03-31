@@ -100,7 +100,7 @@ class Options {
 	public function setPath(File $path) {
 		$this->path = $path;
 		if ($this->isCreateIfNotExists()) {
-			$path->mkdir();
+			$path->getParent()->mkdir();
 			$path->write("");
 			$this->setCreateDefault(true);
 			if (!$path->isFile()) {
