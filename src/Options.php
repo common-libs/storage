@@ -85,8 +85,7 @@ class Options {
 	 * @since 0.2.1
 	 * @return File
 	 */
-	public function getPath()
-	: File {
+	public function getPath(): File {
 		return $this->path;
 	}
 
@@ -100,18 +99,17 @@ class Options {
 	 */
 	public function setPath(File $path) {
 		$this->path = $path;
-		if (!$path->isFile()) {
-			if ($this->isCreateIfNotExists()) {
-				$path->getDirectory()->mkdir();
-				$path->write("");
-				$this->setCreateDefault(true);
-				if (!$path->isFile()) {
-					throw new FileNotFoundException($path);
-				}
-			} else {
+		if ($this->isCreateIfNotExists()) {
+			$path->mkdir();
+			$path->write("");
+			$this->setCreateDefault(true);
+			if (!$path->isFile()) {
 				throw new FileNotFoundException($path);
 			}
+		} else {
+			throw new FileNotFoundException($path);
 		}
+
 		$this->content = $path->getContent();
 	}
 
@@ -121,8 +119,7 @@ class Options {
 	 * @since 0.2.1
 	 * @return boolean
 	 */
-	public function isCreateIfNotExists()
-	: bool {
+	public function isCreateIfNotExists(): bool {
 		return $this->createIfNotExists;
 	}
 
@@ -140,8 +137,7 @@ class Options {
 	/**
 	 * @return bool
 	 */
-	public function isCreateDefault()
-	: bool {
+	public function isCreateDefault(): bool {
 		return $this->createDefault;
 	}
 

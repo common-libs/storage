@@ -46,8 +46,7 @@ abstract class Storage {
 	 * @return Storage
 	 * @since 1.0.0
 	 */
-	public static function init()
-	: Storage {
+	public static function init(): Storage {
 		return new static();
 	}
 
@@ -108,8 +107,7 @@ abstract class Storage {
 	 * @return bool
 	 * @since 1.0.0
 	 */
-	public function __isset(string $name)
-	: bool {
+	public function __isset(string $name): bool {
 		return isset($this->content[$name]);
 	}
 
@@ -119,8 +117,7 @@ abstract class Storage {
 	 * @return string
 	 * @since 1.0.0
 	 */
-	public function __toString()
-	: string {
+	public function __toString(): string {
 		return json_encode($this->content);
 	}
 
@@ -130,8 +127,7 @@ abstract class Storage {
 	 * @return array
 	 * @since 0.2.1
 	 */
-	public function getContent()
-	: array {
+	public function getContent(): array {
 		return $this->content;
 	}
 

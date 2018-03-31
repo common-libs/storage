@@ -1,6 +1,7 @@
 <?php
 declare( strict_types=1 );
 
+use common\io\File;
 use common\storage\Options;
 use common\storage\Storage;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +27,7 @@ class TestStorage extends Storage {
 
 	static function setConfig(Options $options) {
 		$options->setCreateIfNotExists(true);
-		$options->setPath(\common\io\File::get("./.store/test1.json"));
+		$options->setPath(new File("./.store/"));
 	}
 
 	static function setDefaults(Storage $storage) {
